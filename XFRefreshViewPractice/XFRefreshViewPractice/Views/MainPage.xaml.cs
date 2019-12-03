@@ -29,7 +29,9 @@ namespace XFRefreshViewPractice.Views
         public MainPage()
         {
             InitializeComponent();
-            RefreshCommand = new Command(ExecuteRefreshCommand);
+
+            //このCommandが呼び出されたときに実行するメソッドを指定
+            RefreshCommand = new Command(async (o)=>await ExecuteRefreshCommand(o));
 
             People = GeneratePeople();
 
@@ -52,8 +54,11 @@ namespace XFRefreshViewPractice.Views
             return people;
         }
 
-        private void ExecuteRefreshCommand(object obj)
+        //実行されるメソッド
+        private async Task ExecuteRefreshCommand(object obj)
         {
+            await Task.Delay(2000);
+
             People.Clear();
 
             People = GeneratePeople(DateTime.Now.ToString());
@@ -62,6 +67,7 @@ namespace XFRefreshViewPractice.Views
             IsRefreshing = false;
         }
 
+        //XAML側でバインドするCommandプロパティを用意
         public ICommand RefreshCommand { get; }
 
         private bool _isRefreshing;
