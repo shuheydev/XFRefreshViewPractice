@@ -13,7 +13,7 @@ namespace XFRefreshViewPractice.Views
     // Learn more about making custom code visible in the Xamarin.Forms previewer
     // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
-    public partial class MainPage : ContentPage,INotifyPropertyChanged
+    public partial class MainPage : ContentPage, INotifyPropertyChanged
     {
         private List<Person> _people;
         public List<Person> People
@@ -31,14 +31,25 @@ namespace XFRefreshViewPractice.Views
             InitializeComponent();
 
             //このCommandが呼び出されたときに実行するメソッドを指定
-            RefreshCommand = new Command(async (o)=>await ExecuteRefreshCommand(o));
+            //RefreshCommand = new Command(async (o) => await ExecuteRefreshCommand(o));
+            RefreshCommand = new Command(async (o) => {
+                await Task.Delay(2000);
+
+                People.Clear();
+
+                People = GeneratePeople(DateTime.Now.ToString());
+
+                //ぐるぐるを非表示にする
+                IsRefreshing = false;
+            });
+
 
             People = GeneratePeople();
 
             this.BindingContext = this;
         }
 
-        private List<Person> GeneratePeople(string additional="")
+        private List<Person> GeneratePeople(string additional = "")
         {
             var people = new List<Person>();
 
